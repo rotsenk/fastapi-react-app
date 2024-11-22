@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from model.books import Book
 
@@ -35,7 +36,18 @@ books_db = [
     }
 ]
 
+origins = [
+    "http://localhost:5173"
+]
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.get("/")
 def root():
