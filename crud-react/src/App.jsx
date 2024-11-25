@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function BooksItems({ title, id, year, score }) {
+function BooksItems({ title, id, year, score, handlerDeleteButton }) {
   return (
     <article className="bg-gray-100 rounded-xl shadow-md p-6 transform transition-all hover:scale-105 hover:shadow-xl">
       <h3 className="text-center text-xl font-semibold text-gray-800 mb-4">
@@ -18,7 +18,10 @@ function BooksItems({ title, id, year, score }) {
         </p>
       </div>
       <div className="flex justify-center mt-6">
-        <button className="bg-red-600 text-white w-full rounded-lg py-2 font-medium hover:bg-red-700 transition-colors">
+        <button
+          className="bg-red-600 text-white w-full rounded-lg py-2 font-medium hover:bg-red-700 transition-colors"
+          onClick={handlerDeleteButton}
+        >
           Delete
         </button>
       </div>
@@ -58,6 +61,16 @@ function App() {
     });
 
     // llamar a la función para que la modificación en backend se vea reflejada en frontend
+    getBooks();
+  };
+
+  // eliminar
+  const handlerDeleteButton = async (id) => {
+    await fetch(`http://localhost:8000/api/v1/books/${id}`, {
+      method: "DELETE",
+    });
+
+    // llamar a la función para que se actualice el estado de la app
     getBooks();
   };
 
@@ -174,6 +187,7 @@ function App() {
               id={book.id}
               year={book.year}
               score={book.score}
+              handlerDeleteButton={ () => handlerDeleteButton(book.id) }
             />
           ))
         )}
